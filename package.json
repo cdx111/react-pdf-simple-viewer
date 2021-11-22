@@ -33,7 +33,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "pdflib",
+  "name": "react-pdf-simple-viewer",
   "author": "cdx",
   "module": "dist/pdflib.esm.js",
   "size-limit": [
