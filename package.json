@@ -53,6 +53,7 @@
     "@size-limit/preset-small-lib": "^7.0.1",
     "@types/react": "^17.0.35",
     "@types/react-dom": "^17.0.11",
+    "@types/styled-components": "^5.1.15",
     "husky": "^7.0.4",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -62,6 +63,7 @@
     "typescript": "^3.9.10"
   },
   "dependencies": {
-    "pdfjs-dist": "^2.10.377"
+    "pdfjs-dist": "^2.10.377",
+    "styled-components": "^5.3.3"
   }
 }
