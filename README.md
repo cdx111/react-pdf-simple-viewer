@@ -19,11 +19,31 @@ yarn add react-pdf-simple-viewer
 ## 例子 1
 
 ```tsx
-```
+import { Document, Page } from 'react-pdf-simple-viewer';
+import { useState } from 'react';
 
-## 列子 2
+const App = () => {
+  const [pages, setPages] = useState<number[]>([]);
+  return (
+    <div>
+      <Document
+        URL="http://localhost:1234/123.pdf"
+        onSuccess={async PDF => {
+          const { numPages } = PDF;
+          setPages(
+            Array.from({ length: numPages })
+              .fill(0)
+              .map((val, index) => index + 1)
+          );
+        }}
+      >
+        {pages.map(value => {
+          return <Page index={value} key={value} width={857} scale={1}></Page>;
+        })}
+      </Document>
+    </div>
+  );
+};
 
-``
-
-```tsx
+ReactDOM.render(<App />, document.getElementById('root'));
 ```

@@ -52,22 +52,27 @@ const PageStyle = styled.div`
 
   .textLayer .highlight.selected {
     background-color: rgba(0, 100, 0, 1);
+    color: transparent;
   }
 
   .textLayer ::-moz-selection {
     background: rgba(0, 0, 255, 1);
+    color: transparent;
   }
 
   .textLayer ::selection {
     background: rgba(0, 0, 255, 1);
+    color: transparent;
   }
 
   /* Avoids https://github.com/mozilla/pdf.js/issues/13840 in Chrome */
   .textLayer br::-moz-selection {
     background: transparent;
+    color: transparent;
   }
   .textLayer br::selection {
     background: transparent;
+    color: transparent;
   }
 
   .textLayer .endOfContent {
