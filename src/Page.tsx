@@ -1,4 +1,5 @@
-import React, { useCallback, useContext, useRef, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useContext, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { DocumentContext } from './documentContext';
 import * as pdfjs from 'pdfjs-dist';
@@ -88,11 +89,20 @@ const PageStyle = styled.div`
   }
 `;
 
+/*
+ @prop index 渲染那一页PDF，默认值1
+ @prop rotate 必须是90的倍数, 默认值0
+ @prop scale width与实际pdf宽度的比，默认值1
+ @prop width page宽度，默认值实际pdf宽度,单位px
+*/
 type PageProps = {
-  index: number;
+  index?: number;
+  scale?: number;
+  width?: number;
+  rotate?: number;
 };
 
-export const Page: React.FC<PageProps> = ({ index }) => {
+export const Page: React.FC<PageProps> = ({ index = 1, width, scale = 1 }) => {
   const [textLayerStyle, setTextLayerStyle] = useState<React.CSSProperties>({});
   const PDF = useContext(DocumentContext);
   const refTextLayer = useRef<HTMLDivElement>(null);
@@ -101,27 +111,30 @@ export const Page: React.FC<PageProps> = ({ index }) => {
       if (!node || !PDF) return;
       const page = await PDF.getPage(index);
       async function render() {
+        const WIDTH = width ?? page._pageInfo.view[2];
         // 根据width计算实际缩放比
-        const scale = 857 / page._pageInfo.view[2];
-
-        const viewport = page.getViewport({ scale: scale });
+        const SCALE = (WIDTH / page._pageInfo.view[2]) * scale;
+        const viewport = page.getViewport({
+          scale: SCALE,
+        });
         const outputScale = window.devicePixelRatio || 1;
         const context = node.getContext('2d');
 
-        // 高宽比，计算实际高度
-        const ratioHW = page._pageInfo.view[3] / page._pageInfo.view[2];
-        node.width = Math.floor(857 * outputScale);
-        node.height = Math.floor(857 * ratioHW * outputScale);
-        node.style.width = Math.floor(857) + 'px';
-        node.style.height = Math.floor(857 * ratioHW) + 'px';
+        node.width = Math.floor(viewport.width * outputScale);
+        node.height = Math.floor(viewport.height * outputScale);
+        node.style.width = Math.floor(viewport.width) + 'px';
+        node.style.height = Math.floor(viewport.height) + 'px';
+
         const transform =
-          outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-        const renderContext = {
+          outputScale !== 1
+            ? [outputScale, 0, 0, outputScale, 0, 0]
+            : undefined;
+
+        page.render({
           canvasContext: context as any,
-          transform: transform as any,
+          transform: transform,
           viewport: viewport,
-        };
-        page.render(renderContext);
+        });
 
         async function renderTextLayer() {
           const textContent = await page.getTextContent();
@@ -140,7 +153,6 @@ export const Page: React.FC<PageProps> = ({ index }) => {
             textDivs: [],
           });
         }
-
         renderTextLayer();
       }
       render();
