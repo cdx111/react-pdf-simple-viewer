@@ -25,6 +25,12 @@ export function useDocumen({ URL, onSuccess, onError }: useDocumenParams) {
     if (URL) {
       getPDF();
     }
+
+    return () => {
+      if (PDF) {
+        PDF.destroy();
+      }
+    };
   }, [URL]);
   return [PDF];
 }

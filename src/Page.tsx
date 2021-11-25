@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { useCallback, useContext, useRef, useState } from 'react';
+import { useCallback, useContext, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { DocumentContext } from './documentContext';
 import * as pdfjs from 'pdfjs-dist';
+import { PDFPageProxy } from 'pdfjs-dist/types/src/display/api';
+import { Spinner } from './Spinner';
+// page高度获取的问题
 
 const PageStyle = styled.div`
   position: relative;
@@ -110,68 +113,94 @@ type PageProps = {
 export const Page: React.FC<PageProps> = ({ index = 1, width, scale = 1 }) => {
   const [textLayerStyle, setTextLayerStyle] = useState<React.CSSProperties>({});
   const PDF = useContext(DocumentContext);
-  const refTextLayer = useRef<HTMLDivElement>(null);
-  const callRefCanvas = useCallback(
-    async (node: HTMLCanvasElement) => {
-      if (!node || !PDF) return;
-      const page = await PDF.getPage(index);
-      async function render() {
-        const WIDTH = width ?? page._pageInfo.view[2];
-        // 根据width计算实际缩放比
-        const SCALE = (WIDTH / page._pageInfo.view[2]) * scale;
-        const viewport = page.getViewport({
-          scale: SCALE,
-        });
-        const outputScale = window.devicePixelRatio || 1;
-        const context = node.getContext('2d');
+  const [page, setPage] = useState<PDFPageProxy | null>(null);
+  const [canvas, setCanvas] = useState<HTMLCanvasElement>();
+  const [textLayer, setTextLayer] = useState<HTMLDivElement>();
 
-        node.width = Math.floor(viewport.width * outputScale);
-        node.height = Math.floor(viewport.height * outputScale);
-        node.style.width = Math.floor(viewport.width) + 'px';
-        node.style.height = Math.floor(viewport.height) + 'px';
-
-        const transform =
-          outputScale !== 1
-            ? [outputScale, 0, 0, outputScale, 0, 0]
-            : undefined;
-
-        page.render({
-          canvasContext: context as any,
-          transform: transform,
-          viewport: viewport,
-        });
-
-        async function renderTextLayer() {
-          const textContent = await page.getTextContent();
-          const nodeOffset = node.getBoundingClientRect();
-          setTextLayerStyle({
-            left: 0,
-            top: 0,
-            height: nodeOffset.height,
-            width: nodeOffset.width,
-          });
-
-          pdfjs.renderTextLayer({
-            textContent: textContent,
-            container: refTextLayer.current as HTMLElement,
-            viewport: viewport,
-            textDivs: [],
-          });
-        }
-        renderTextLayer();
+  useEffect(() => {
+    if (PDF) {
+      PDF.getPage(index).then(p => {
+        setPage(p);
+      });
+    }
+    return () => {
+      if (PDF) {
+        setPage(null);
       }
-      render();
-    },
-    [PDF]
-  );
+    };
+  }, [PDF]);
+
+  useEffect(() => {
+    async function render() {
+      if (!page || !PDF || !canvas || !textLayer) return;
+      const WIDTH = width ?? page._pageInfo.view[2];
+      // 根据width计算实际缩放比
+      const SCALE = (WIDTH / page._pageInfo.view[2]) * scale;
+      const viewport = page.getViewport({
+        scale: SCALE,
+      });
+
+      const outputScale = window.devicePixelRatio || 1;
+      const context = canvas.getContext('2d');
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = Math.floor(viewport.width) + 'px';
+      canvas.style.height = Math.floor(viewport.height) + 'px';
+
+      const transform =
+        outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
+
+      page.render({
+        canvasContext: context as any,
+        transform: transform,
+        viewport: viewport,
+      });
+
+      async function renderTextLayer() {
+        if (!page || !canvas || !textLayer) return;
+        const textContent = await page.getTextContent();
+        const nodeOffset = canvas.getBoundingClientRect();
+        setTextLayerStyle({
+          left: 0,
+          top: 0,
+          height: nodeOffset.height,
+          width: nodeOffset.width,
+        });
+        textLayer.innerHTML = '';
+        pdfjs.renderTextLayer({
+          textContent: textContent,
+          container: textLayer as HTMLElement,
+          viewport: viewport,
+          textDivs: [],
+        });
+      }
+      renderTextLayer();
+    }
+    render();
+  }, [canvas, textLayer, PDF, page, scale]);
+
+  const callRefCanvas = useCallback((node: HTMLCanvasElement) => {
+    setCanvas(node);
+  }, []);
+
+  const callRefTextLayer = useCallback((node: HTMLDivElement) => {
+    setTextLayer(node);
+  }, []);
+
   return (
     <PageStyle>
-      <canvas ref={callRefCanvas}></canvas>
-      <div
-        className="textLayer"
-        ref={refTextLayer}
-        style={textLayerStyle}
-      ></div>
+      {page ? (
+        <>
+          <canvas ref={callRefCanvas}></canvas>
+          <div
+            className="textLayer"
+            ref={callRefTextLayer}
+            style={textLayerStyle}
+          ></div>
+        </>
+      ) : (
+        <Spinner></Spinner>
+      )}
     </PageStyle>
   );
 };
