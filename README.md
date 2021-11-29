@@ -53,7 +53,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 
 # 文档
 
-Document 组件的 prop 类型：
+### Document 组件的 prop 类型：
 
 **`URL`:**
 
@@ -73,7 +73,7 @@ Document 组件的 prop 类型：
 - Required: false
 - Description: PDF 加载失败时调用
 
-Page 组建的 prop 类型：
+### Page 组建的 prop 类型：
 
 **`index`:**
 
