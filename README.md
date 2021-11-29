@@ -1,5 +1,7 @@
 # react-pdf-simple-viewer
 
+![License](https://img.shields.io/github/license/cdx0/react-pdf-simple-viewer)
+
 > 用于在 React 展示 PDF,使用起来非常简单。支持缩放、旋转、分页、文本复制, 提供实现阅读器的 demo。
 
 # 安装
