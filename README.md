@@ -1,7 +1,7 @@
 # react-pdf-simple-viewer
 
 ![License](https://img.shields.io/github/license/cdx0/react-pdf-simple-viewer?style=flat-square) ![NPM](https://img.shields.io/npm/v/react-pdf-simple-viewer?style=flat-square)
-![typescript](https://img.shields.io/badge/%E6%94%AF%E6%8C%81-typescript-blue)
+![typescript](https://img.shields.io/badge/%E6%94%AF%E6%8C%81-typescript-blue?style=flat-square)
 
 > 用于在 React 展示 PDF,使用起来非常简单。支持缩放、旋转、文本复制。
 
