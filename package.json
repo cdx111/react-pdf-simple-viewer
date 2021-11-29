@@ -1,9 +1,26 @@
 {
   "version": "0.1.5",
-  "repository":{
+  "repository": {
     "type": "git",
-    "url": "git@github.com:cdx0/react-pdf-simple-viewer.git"
+    "url": "git+ssh://git@github.com:cdx0/react-pdf-simple-viewer.git"
   },
+  "keywords": [
+    "pdf",
+    "document",
+    "pages",
+    "pdf viewer",
+    "pdf-viewer",
+    "rotate",
+    "rotate pdf",
+    "zoom",
+    "zoom pdf",
+    "react",
+    "reactjs",
+    "react-pdf",
+    "react-pdf-viewer",
+    "react-pdf-simple-viewer",
+    "react typescript pdf"
+  ],
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
