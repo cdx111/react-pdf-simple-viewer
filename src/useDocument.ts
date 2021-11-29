@@ -1,7 +1,7 @@
 import * as pdfjs from 'pdfjs-dist';
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 import { useEffect, useState } from 'react';
-pdfjs.GlobalWorkerOptions.workerSrc = `http://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.js`;
 
 type useDocumenParams = {
   URL: string;
@@ -22,6 +22,7 @@ export function useDocumen({ URL, onSuccess, onError }: useDocumenParams) {
         onError?.(e);
       }
     }
+
     if (URL) {
       getPDF();
     }

@@ -87,6 +87,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 - Type: number
 - Required: false
 - Description: 页面的宽度，单位默认 px
+- Default: 默认为读取 PDF 页面 viewport 的宽度
 
 **`scale`:**
 

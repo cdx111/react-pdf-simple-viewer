@@ -20,15 +20,7 @@ const App = () => {
         }}
       >
         {pages.map(value => {
-          return (
-            <Page
-              hideTextLayer={true}
-              index={value}
-              key={value}
-              width={857}
-              scale={1}
-            ></Page>
-          );
+          return <Page index={value} key={value} width={857} scale={1}></Page>;
         })}
       </Document>
     </div>

@@ -9,6 +9,7 @@ import { Spinner } from './Spinner';
 
 const PageStyle = styled.div`
   position: relative;
+  will-change: scroll-position;
   .textLayer {
     position: absolute;
     top: 0;
@@ -122,6 +123,7 @@ export const Page: React.FC<PageProps> = ({
   const [page, setPage] = useState<PDFPageProxy | null>(null);
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
   const [textLayer, setTextLayer] = useState<HTMLDivElement>();
+  const [pageWidth, setPageWidth] = useState<number | null>(null);
 
   useEffect(() => {
     if (PDF) {
@@ -152,7 +154,7 @@ export const Page: React.FC<PageProps> = ({
       canvas.height = Math.floor(viewport.height * outputScale);
       canvas.style.width = Math.floor(viewport.width) + 'px';
       canvas.style.height = Math.floor(viewport.height) + 'px';
-
+      setPageWidth(Math.floor(viewport.width));
       const transform =
         outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
 
@@ -194,7 +196,7 @@ export const Page: React.FC<PageProps> = ({
   }, []);
 
   return (
-    <PageStyle>
+    <PageStyle style={{ width: pageWidth ? `${pageWidth}px` : 'auto' }}>
       {page ? (
         <>
           <canvas ref={callRefCanvas}></canvas>

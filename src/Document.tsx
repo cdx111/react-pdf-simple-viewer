@@ -1,4 +1,5 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import { useDocumen } from './useDocument';
 import { DocumentContext } from './documentContext';
 import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
@@ -8,6 +9,8 @@ type DocumentProps = {
   onError?: (e: any) => void;
 };
 
+const DocumentStyle = styled.div``;
+
 export const Document: React.FC<DocumentProps> = ({
   URL,
   onSuccess,
@@ -16,8 +19,10 @@ export const Document: React.FC<DocumentProps> = ({
 }) => {
   const [PDF] = useDocumen({ URL, onSuccess, onError });
   return (
-    <DocumentContext.Provider value={PDF}>
-      {rest.children}
-    </DocumentContext.Provider>
+    <DocumentStyle>
+      <DocumentContext.Provider value={PDF}>
+        {rest.children}
+      </DocumentContext.Provider>
+    </DocumentStyle>
   );
 };
