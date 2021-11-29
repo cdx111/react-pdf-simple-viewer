@@ -73,7 +73,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 - Required: false
 - Description: PDF 加载失败时调用
 
-### Page 组建的 prop 类型：
+### Page 组件的 prop 类型：
 
 **`index`:**
 
