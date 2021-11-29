@@ -51,6 +51,8 @@ const App = () => {
 ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
+这里是[Code Sandbox demo](https://codesandbox.io/s/i4p9x?file=/src/App.tsx).
+
 # 文档
 
 ### Document 组件的 prop 类型：
