@@ -108,9 +108,15 @@ type PageProps = {
   scale?: number;
   width?: number;
   rotate?: number;
+  hideTextLayer?: boolean;
 };
 
-export const Page: React.FC<PageProps> = ({ index = 1, width, scale = 1 }) => {
+export const Page: React.FC<PageProps> = ({
+  index = 1,
+  width,
+  scale = 1,
+  hideTextLayer = false,
+}) => {
   const [textLayerStyle, setTextLayerStyle] = useState<React.CSSProperties>({});
   const PDF = useContext(DocumentContext);
   const [page, setPage] = useState<PDFPageProxy | null>(null);
@@ -132,7 +138,7 @@ export const Page: React.FC<PageProps> = ({ index = 1, width, scale = 1 }) => {
 
   useEffect(() => {
     async function render() {
-      if (!page || !PDF || !canvas || !textLayer) return;
+      if (!page || !PDF || !canvas) return;
       const WIDTH = width ?? page._pageInfo.view[2];
       // 根据width计算实际缩放比
       const SCALE = (WIDTH / page._pageInfo.view[2]) * scale;
@@ -157,7 +163,7 @@ export const Page: React.FC<PageProps> = ({ index = 1, width, scale = 1 }) => {
       });
 
       async function renderTextLayer() {
-        if (!page || !canvas || !textLayer) return;
+        if (!page || !canvas || !textLayer || hideTextLayer) return;
         const textContent = await page.getTextContent();
         const nodeOffset = canvas.getBoundingClientRect();
         setTextLayerStyle({
@@ -192,11 +198,13 @@ export const Page: React.FC<PageProps> = ({ index = 1, width, scale = 1 }) => {
       {page ? (
         <>
           <canvas ref={callRefCanvas}></canvas>
-          <div
-            className="textLayer"
-            ref={callRefTextLayer}
-            style={textLayerStyle}
-          ></div>
+          {!hideTextLayer && (
+            <div
+              className="textLayer"
+              ref={callRefTextLayer}
+              style={textLayerStyle}
+            ></div>
+          )}
         </>
       ) : (
         <Spinner></Spinner>

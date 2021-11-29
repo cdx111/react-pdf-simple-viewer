@@ -1,8 +1,8 @@
 # react-pdf-simple-viewer
 
-> 用于在 React 展示 PDF,只需要传递一个 URL。
+> 用于在 React 展示 PDF,使用起来非常简单。支持缩放、旋转、分页、文本复制, 提供实现阅读器的 demo。
 
-# Install
+# 安装
 
 ```bash
 #npm
@@ -14,7 +14,7 @@ yarn add react-pdf-simple-viewer
 
 ``
 
-# Getting started
+# 快速开始
 
 ## 例子 1
 
