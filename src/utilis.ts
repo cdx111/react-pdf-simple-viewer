@@ -18,5 +18,5 @@ export async function getPageHeight(
   const viewport = page.getViewport({
     scale: SCALE,
   });
-  return viewport.height;
+  return Math.floor(viewport.height);
 }

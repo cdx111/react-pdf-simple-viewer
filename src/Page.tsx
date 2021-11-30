@@ -110,6 +110,7 @@ type PageProps = {
   width?: number;
   rotate?: number;
   hideTextLayer?: boolean;
+  style?: React.CSSProperties;
 };
 
 export const Page: React.FC<PageProps> = ({
@@ -117,6 +118,7 @@ export const Page: React.FC<PageProps> = ({
   width,
   scale = 1,
   hideTextLayer = false,
+  style = {},
 }) => {
   const [textLayerStyle, setTextLayerStyle] = useState<React.CSSProperties>({});
   const PDF = useContext(DocumentContext);
@@ -124,7 +126,7 @@ export const Page: React.FC<PageProps> = ({
   const [canvas, setCanvas] = useState<HTMLCanvasElement>();
   const [textLayer, setTextLayer] = useState<HTMLDivElement>();
   const [pageWidth, setPageWidth] = useState<number | null>(null);
-
+  const [pageHeight, setPageHeight] = useState<number | null>(null);
   useEffect(() => {
     if (PDF) {
       PDF.getPage(index).then(p => {
@@ -155,6 +157,7 @@ export const Page: React.FC<PageProps> = ({
       canvas.style.width = Math.floor(viewport.width) + 'px';
       canvas.style.height = Math.floor(viewport.height) + 'px';
       setPageWidth(Math.floor(viewport.width));
+      setPageHeight(Math.floor(viewport.height));
       const transform =
         outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : undefined;
 
@@ -196,7 +199,13 @@ export const Page: React.FC<PageProps> = ({
   }, []);
 
   return (
-    <PageStyle style={{ width: pageWidth ? `${pageWidth}px` : 'auto' }}>
+    <PageStyle
+      style={{
+        width: pageWidth ? `${pageWidth}px` : 'auto',
+        height: pageHeight ? `${pageHeight}px` : 'auto',
+        ...style,
+      }}
+    >
       {page ? (
         <>
           <canvas ref={callRefCanvas}></canvas>

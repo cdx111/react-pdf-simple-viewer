@@ -8,7 +8,10 @@
     "build": "parcel build index.html"
   },
   "dependencies": {
-    "react-app-polyfill": "^1.0.0"
+    "@types/react-window": "^1.8.5",
+    "react-app-polyfill": "^1.0.0",
+    "react-virtualized-auto-sizer": "^1.0.6",
+    "react-window": "^1.8.6"
   },
   "alias": {
     "react": "../node_modules/react",
@@ -21,6 +24,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.16.0",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
+    "@types/react-virtualized-auto-sizer": "^1.0.1",
     "parcel-bundler": "^1.12.5",
     "typescript": "^3.4.5"
   }
